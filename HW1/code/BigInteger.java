@@ -20,36 +20,59 @@ public class BigInteger
         if (input < 0) {
             sign = -1;
         }
-        this.putArrayIntoValue(Integer.toString(input*this.sign).toCharArray());
+        putArrayIntoValue(Integer.toString(input*sign).toCharArray());
     }
   
     public BigInteger(String s)
     {
         char firstChar = s.charAt(0);
         if (firstChar == '+') {
-            this.putArrayIntoValue(s.substring(1).toCharArray());
+            putArrayIntoValue(s.substring(1).toCharArray());
         } else if(firstChar == '-') {
             sign = -1;
-            this.putArrayIntoValue(s.substring(1).toCharArray());
+            putArrayIntoValue(s.substring(1).toCharArray());
         } else {
-            this.putArrayIntoValue(s.toCharArray());
+            putArrayIntoValue(s.toCharArray());
         }
     }
 
     private void putArrayIntoValue(char[] array) {
         int length = array.length;
-        for (int i=0; i<length; i++){
-            this.value[i] = array[length-i-1];
+        for (int i=0; i<length; i++) {
+            value[i] = array[length-i-1];
         }
+        for (int i=length; i<200; i++) {
+            value[i] = '0';
+        }
+    }
+
+    public void reverseSign() {
+        sign *= -1;
     }
   
     public BigInteger add(BigInteger big)
     {
+        if (sign != big.sign) {
+            big.reverseSign();
+            return subtract(big);
+        }
+        BigInteger result = new BigInteger(0);
+        result.sign = sign;
+        int temp = 0;
+        for (int i=0; i<200; i++) {
+            temp += (value[i]-'0') + (big.value[i]-'0');
+            result.value[i] = (char) (temp%10);
+            temp /= 10;
+        }
         return big;
     }
 
     public BigInteger subtract(BigInteger big)
     {
+        if (sign != big.sign) {
+            big.reverseSign();
+            return add(big);
+        }
         return big;
     }
 
@@ -70,6 +93,9 @@ public class BigInteger
   
     public static void main(String[] args) throws Exception
     {
+        BigInteger a = new BigInteger("10000000000000000");
+        BigInteger b = new BigInteger("200000000000000000");
+        System.out.println(a.add(b));
 //        try (InputStreamReader isr = new InputStreamReader(System.in))
 //        {
 //            try (BufferedReader reader = new BufferedReader(isr))

@@ -42,9 +42,6 @@ public class BigInteger
         for (int i=0; i<length; i++) {
             value[i] = array[length-i-1];
         }
-        for (int i=length; i<200; i++) {
-            value[i] = '0';
-        }
     }
 
     public void reverseSign() {
@@ -85,7 +82,12 @@ public class BigInteger
     @Override
     public String toString()
     {
-        return new String(value);
+        char[] result = new char[201];
+        for (int i=0; i<200; i++) {
+            result[i+1] = value[199-i];
+        }
+        if (sign==-1) result[0] = '-';
+        return new String(result);
     }
 
 //    static BigInteger evaluate(String input) throws IllegalArgumentException
@@ -97,7 +99,7 @@ public class BigInteger
     {
         BigInteger a = new BigInteger("10000000000000000");
         BigInteger b = new BigInteger("200000000000000000");
-        System.out.println(a.add(b));
+        System.out.println(a);
 //        try (InputStreamReader isr = new InputStreamReader(System.in))
 //        {
 //            try (BufferedReader reader = new BufferedReader(isr))

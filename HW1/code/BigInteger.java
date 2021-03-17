@@ -11,90 +11,89 @@ public class BigInteger
   
     // implement this
     public static final Pattern EXPRESSION_PATTERN = Pattern.compile("");
+
+    private char[] value = new char[200];
   
-  
-    public BigInteger(int i)
+    public BigInteger(int input)
     {
-    }
-  
-    public BigInteger(int[] num1)
-    {
+        this.putArrayIntoValue(Integer.toString(input).toCharArray());
     }
   
     public BigInteger(String s)
     {
+        this.putArrayIntoValue(s.toCharArray());
+    }
+
+    private void putArrayIntoValue(char[] array) {
+        int length = array.length;
+        for (int i=0; i<length; i++){
+            this.value[i] = array[length-i-1];
+        }
     }
   
-    public BigInteger add(BigInteger big)
-    {
-    }
+//    public BigInteger add(BigInteger big)
+//    {
+//        BigInteger result = big;
+//    }
+//
+//    public BigInteger subtract(BigInteger big)
+//    {
+//    }
+//
+//    public BigInteger multiply(BigInteger big)
+//    {
+//    }
   
-    public BigInteger subtract(BigInteger big)
-    {
-    }
-  
-    public BigInteger multiply(BigInteger big)
-    {
-    }
-  
-    @Override
-    public String toString()
-    {
-    }
-  
-    static BigInteger evaluate(String input) throws IllegalArgumentException
-    {
-        // implement here
-        // parse input
-        // using regex is allowed
-  
-        // One possible implementation
-        // BigInteger num1 = new BigInteger(arg1);
-        // BigInteger num2 = new BigInteger(arg2);
-        // BigInteger result = num1.add(num2);
-        // return result;
-    }
+//    @Override
+//    public String toString()
+//    {
+//    }
+//
+//    static BigInteger evaluate(String input) throws IllegalArgumentException
+//    {
+//
+//    }
   
     public static void main(String[] args) throws Exception
     {
-        try (InputStreamReader isr = new InputStreamReader(System.in))
-        {
-            try (BufferedReader reader = new BufferedReader(isr))
-            {
-                boolean done = false;
-                while (!done)
-                {
-                    String input = reader.readLine();
-  
-                    try
-                    {
-                        done = processInput(input);
-                    }
-                    catch (IllegalArgumentException e)
-                    {
-                        System.err.println(MSG_INVALID_INPUT);
-                    }
-                }
-            }
-        }
+//        try (InputStreamReader isr = new InputStreamReader(System.in))
+//        {
+//            try (BufferedReader reader = new BufferedReader(isr))
+//            {
+//                boolean done = false;
+//                while (!done)
+//                {
+//                    String input = reader.readLine();
+//
+//                    try
+//                    {
+//                        done = processInput(input);
+//                    }
+//                    catch (IllegalArgumentException e)
+//                    {
+//                        System.err.println(MSG_INVALID_INPUT);
+//                    }
+//                }
+//            }
+//        }
     }
   
-    static boolean processInput(String input) throws IllegalArgumentException
-    {
-        boolean quit = isQuitCmd(input);
-  
-        if (quit)
-        {
-            return true;
-        }
-        else
-        {
-            BigInteger result = evaluate(input);
-            System.out.println(result.toString());
-  
-            return false;
-        }
-    }
+//    static boolean processInput(String input) throws IllegalArgumentException
+//    {
+//        boolean quit = isQuitCmd(input);
+//
+//        if (quit)
+//        {
+//            return true;
+//        }
+//        else
+//        {
+//            BigInteger result = evaluate(input);
+//            System.out.println(result.toString());
+//
+//            return false;
+//        }
+//    }
   
     static boolean isQuitCmd(String input)
     {

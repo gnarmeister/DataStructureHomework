@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
   
@@ -64,7 +65,7 @@ public class BigInteger
             result.value[i] = (char) (temp%10);
             temp /= 10;
         }
-        return big;
+        return result;
     }
 
     public BigInteger subtract(BigInteger big)
@@ -81,10 +82,11 @@ public class BigInteger
         return big;
     }
   
-//    @Override
-//    public String toString()
-//    {
-//    }
+    @Override
+    public String toString()
+    {
+        return new String(value);
+    }
 
 //    static BigInteger evaluate(String input) throws IllegalArgumentException
 //    {

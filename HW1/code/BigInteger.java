@@ -12,16 +12,28 @@ public class BigInteger
     // implement this
     public static final Pattern EXPRESSION_PATTERN = Pattern.compile("");
 
-    private char[] value = new char[200];
+    private final char[] value = new char[200];
+    private int sign = 1;
   
     public BigInteger(int input)
     {
-        this.putArrayIntoValue(Integer.toString(input).toCharArray());
+        if (input < 0) {
+            sign = -1;
+        }
+        this.putArrayIntoValue(Integer.toString(input*this.sign).toCharArray());
     }
   
     public BigInteger(String s)
     {
-        this.putArrayIntoValue(s.toCharArray());
+        char firstChar = s.charAt(0);
+        if (firstChar == '+') {
+            this.putArrayIntoValue(s.substring(1).toCharArray());
+        } else if(firstChar == '-') {
+            sign = -1;
+            this.putArrayIntoValue(s.substring(1).toCharArray());
+        } else {
+            this.putArrayIntoValue(s.toCharArray());
+        }
     }
 
     private void putArrayIntoValue(char[] array) {
@@ -31,27 +43,29 @@ public class BigInteger
         }
     }
   
-//    public BigInteger add(BigInteger big)
-//    {
-//        BigInteger result = big;
-//    }
-//
-//    public BigInteger subtract(BigInteger big)
-//    {
-//    }
-//
-//    public BigInteger multiply(BigInteger big)
-//    {
-//    }
+    public BigInteger add(BigInteger big)
+    {
+        return big;
+    }
+
+    public BigInteger subtract(BigInteger big)
+    {
+        return big;
+    }
+
+    public BigInteger multiply(BigInteger big)
+    {
+        return big;
+    }
   
 //    @Override
 //    public String toString()
 //    {
 //    }
-//
+
 //    static BigInteger evaluate(String input) throws IllegalArgumentException
 //    {
-//
+//        input.split("+|*|-");
 //    }
   
     public static void main(String[] args) throws Exception

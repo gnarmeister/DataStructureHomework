@@ -1,6 +1,5 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
   
@@ -148,7 +147,25 @@ public class BigInteger
 
     public BigInteger multiply(BigInteger big)
     {
-        return big;
+        BigInteger result = new BigInteger(0);
+        result.sign = sign * big.sign;
+        result.numberOfDigits = numberOfDigits + big.numberOfDigits;
+
+        int temp = 0;
+
+        for (int i=0; i<result.numberOfDigits; i++) {
+            for (int j=0; j<=i; j++) {
+                if (value[j] != '\u0000' && big.value[i-j] != '\u0000') {
+                    temp += (value[j]-'0') * (big.value[i-j]-'0');
+                }
+            }
+            result.value[i] = (char) (temp%10+'0');
+            temp /= 10;
+        }
+        if (result.value[result.numberOfDigits - 1] == '0') {
+            result.value[--result.numberOfDigits] = '\u0000';
+        }
+        return result;
     }
   
     @Override

@@ -11,7 +11,7 @@ public class BigInteger
     public static final String MSG_INVALID_INPUT = "입력이 잘못되었습니다.";
   
     // implement this
-    public static final Pattern EXPRESSION_PATTERN = Pattern.compile("");
+    public static final String VALUE_EXPRESSION = "[1-9][0-9]*|[0]";
 
     private final char[] value = new char[200];
     private int sign = 1;
@@ -111,12 +111,12 @@ public class BigInteger
         if (sign != big.sign) {
             return add(big.reverseSign());
         }
-        BigInteger result = new BigInteger(0);
+
         if (!biggerValueThan(big)) {
-            result = big.subtract(this);
-            return result.reverseSign();
+            return big.subtract(this).reverseSign();
         }
 
+        BigInteger result = new BigInteger(0);
         result.sign = sign;
 
         int temp = 0;
@@ -171,16 +171,50 @@ public class BigInteger
         return new String(result);
     }
 
-//    static BigInteger evaluate(String input) throws IllegalArgumentException
-//    {
-//        input.split("+|*|-");
-//    }
+    static BigInteger evaluate(String input) throws IllegalArgumentException
+    {
+        String noSpace = input.replaceAll(" ", "");
+        String[] operators = noSpace.split(VALUE_EXPRESSION);
+
+        char[] secondOperators = operators[operators.length-1].toCharArray();
+        char operator = secondOperators[0];
+
+        Matcher valueMatcher = Pattern.compile(VALUE_EXPRESSION).matcher(noSpace);
+        valueMatcher.find();
+        String value1 = valueMatcher.group();
+        valueMatcher.find();
+        String value2 = valueMatcher.group();
+
+        if (operators.length == 2) {
+            value1 = operators[0] + value1;
+        }
+
+        if (secondOperators.length == 2) {
+            value2 = secondOperators[1] + value2;
+        }
+
+        BigInteger big1 = new BigInteger(value1), big2 = new BigInteger(value2);
+
+        switch (operator) {
+            case '+':
+                return big1.add(big2);
+
+            case '-':
+                return big1.subtract(big2);
+
+            default:
+                return big1.multiply(big2);
+        }
+    }
   
     public static void main(String[] args) throws Exception
     {
-        BigInteger a = new BigInteger("-91000");
-        BigInteger b = new BigInteger(-90020);
-        System.out.println(a.subtract(b));
+
+        System.out.println(evaluate("10000000000000000+200000000000000000"));
+        System.out.println(evaluate("20000000000000000-100000000000000000"));
+        System.out.println(evaluate("30000000000000000 - 200000000000000000"));
+        System.out.println(evaluate("50000000 ++1000 "));
+        System.out.println(evaluate("-1000000 + 0"));
 //        try (InputStreamReader isr = new InputStreamReader(System.in))
 //        {
 //            try (BufferedReader reader = new BufferedReader(isr))

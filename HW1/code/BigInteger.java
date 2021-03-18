@@ -48,7 +48,7 @@ public class BigInteger
 
     public BigInteger reverseSign() {
         BigInteger result = new BigInteger(0);
-        result.sign = sign*-1;
+        result.sign = sign*(-1);
         result.numberOfDigits = numberOfDigits;
         System.arraycopy(value, 0, result.value, 0, numberOfDigits);
         return result;
@@ -76,6 +76,7 @@ public class BigInteger
 
         BigInteger result = new BigInteger(0);
         result.sign = sign;
+        result.numberOfDigits = 0;
 
         int temp = 0;
         boolean indicator1 = true, indicator2 = true; // check value[i], big.value[i] is not null
@@ -94,10 +95,12 @@ public class BigInteger
             if (!indicator1 && !indicator2) {
                 if (temp != 0) {
                     result.value[i] = (char) (temp+'0');
+                    result.numberOfDigits++;
                 }
                 break;
             }
             result.value[i] = (char) (temp%10+'0');
+            result.numberOfDigits++;
             temp /= 10;
         }
         return result;
@@ -108,11 +111,12 @@ public class BigInteger
         if (sign != big.sign) {
             return add(big.reverseSign());
         }
+        BigInteger result = new BigInteger(0);
         if (!biggerValueThan(big)) {
-            return big.subtract(this).reverseSign();
+            result = big.subtract(this);
+            return result.reverseSign();
         }
 
-        BigInteger result = new BigInteger(0);
         result.sign = sign;
 
         int temp = 0;
@@ -138,6 +142,7 @@ public class BigInteger
         for (int i=zeroStartIndex; i<numberOfDigits; i++) {
             result.value[i] = '\u0000';
         }
+        result.numberOfDigits = zeroStartIndex;
         return result;
     }
 
@@ -149,11 +154,20 @@ public class BigInteger
     @Override
     public String toString()
     {
-        char[] result = new char[201];
-        for (int i=0; i<200; i++) {
-            result[i+1] = value[199-i];
+        if (numberOfDigits==1 && value[0]=='0') return "0";
+        char[] result;
+        if (sign==-1) {
+            result = new char[numberOfDigits + 1];
+            result[0] = '-';
+            for (int i=0; i<numberOfDigits; i++) {
+                result[i+1] = value[numberOfDigits-i-1];
+            }
+        } else {
+            result = new char[numberOfDigits];
+            for (int i=0; i<numberOfDigits; i++) {
+                result[i] = value[numberOfDigits-i-1];
+            }
         }
-        if (sign==-1) result[0] = '-';
         return new String(result);
     }
 
@@ -164,8 +178,8 @@ public class BigInteger
   
     public static void main(String[] args) throws Exception
     {
-        BigInteger a = new BigInteger("100");
-        BigInteger b = new BigInteger(80);
+        BigInteger a = new BigInteger("-91000");
+        BigInteger b = new BigInteger(-90020);
         System.out.println(a.subtract(b));
 //        try (InputStreamReader isr = new InputStreamReader(System.in))
 //        {

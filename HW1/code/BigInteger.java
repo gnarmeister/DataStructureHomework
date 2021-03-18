@@ -13,8 +13,8 @@ public class BigInteger
     // implement this
     public static final Pattern EXPRESSION_PATTERN = Pattern.compile("");
 
-    private final char[] value = new char[200];
-    private int sign = 1;
+    public final char[] value = new char[200];
+    public int sign = 1;
   
     public BigInteger(int input)
     {
@@ -54,14 +54,34 @@ public class BigInteger
             big.reverseSign();
             return subtract(big);
         }
+
         BigInteger result = new BigInteger(0);
         result.sign = sign;
+
         int temp = 0;
+        boolean indicator1 = true, indicator2 = true; // check value[i], big.value[i] is not null
+
         for (int i=0; i<200; i++) {
-            temp += (value[i]-'0') + (big.value[i]-'0');
-            result.value[i] = (char) (temp%10);
+            if (value[i] == '\u0000') {
+                indicator1 = false;
+            } else {
+                temp += (value[i]-'0');
+            }
+            if (big.value[i] == '\u0000') {
+                indicator2 = false;
+            } else {
+                temp += (big.value[i]-'0');
+            }
+            if (!indicator1 && !indicator2) {
+                if (temp != 0) {
+                    result.value[i] = (char) (temp+'0');
+                }
+                break;
+            }
+            result.value[i] = (char) (temp%10+'0');
             temp /= 10;
         }
+
         return result;
     }
 
@@ -97,9 +117,9 @@ public class BigInteger
   
     public static void main(String[] args) throws Exception
     {
-        BigInteger a = new BigInteger("10000000000000000");
-        BigInteger b = new BigInteger("200000000000000000");
-        System.out.println(a);
+        BigInteger a = new BigInteger("-12468498416543");
+        BigInteger b = new BigInteger(-123);
+        System.out.println(a.add(b));
 //        try (InputStreamReader isr = new InputStreamReader(System.in))
 //        {
 //            try (BufferedReader reader = new BufferedReader(isr))

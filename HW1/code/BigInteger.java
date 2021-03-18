@@ -116,6 +116,7 @@ public class BigInteger
         result.sign = sign;
 
         int temp = 0;
+        int zeroStartIndex = 0;
 
         for (int i=0; i<numberOfDigits; i++) {
             temp += (value[i]-'0');
@@ -130,6 +131,12 @@ public class BigInteger
                 result.value[i] = (char) (temp+'0');
                 temp=0;
             }
+            if (result.value[i] != '0') {
+                zeroStartIndex = i+1;
+            }
+        }
+        for (int i=zeroStartIndex; i<numberOfDigits; i++) {
+            result.value[i] = '\u0000';
         }
         return result;
     }
@@ -158,7 +165,7 @@ public class BigInteger
     public static void main(String[] args) throws Exception
     {
         BigInteger a = new BigInteger("100");
-        BigInteger b = new BigInteger(-80);
+        BigInteger b = new BigInteger(80);
         System.out.println(a.subtract(b));
 //        try (InputStreamReader isr = new InputStreamReader(System.in))
 //        {

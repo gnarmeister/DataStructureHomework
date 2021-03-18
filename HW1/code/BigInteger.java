@@ -209,50 +209,44 @@ public class BigInteger
   
     public static void main(String[] args) throws Exception
     {
+        try (InputStreamReader isr = new InputStreamReader(System.in))
+        {
+            try (BufferedReader reader = new BufferedReader(isr))
+            {
+                boolean done = false;
+                while (!done)
+                {
+                    String input = reader.readLine();
 
-        System.out.println(evaluate("10000000000000000+200000000000000000"));
-        System.out.println(evaluate("20000000000000000-100000000000000000"));
-        System.out.println(evaluate("30000000000000000 - 200000000000000000"));
-        System.out.println(evaluate("50000000 ++1000 "));
-        System.out.println(evaluate("-1000000 + 0"));
-//        try (InputStreamReader isr = new InputStreamReader(System.in))
-//        {
-//            try (BufferedReader reader = new BufferedReader(isr))
-//            {
-//                boolean done = false;
-//                while (!done)
-//                {
-//                    String input = reader.readLine();
-//
-//                    try
-//                    {
-//                        done = processInput(input);
-//                    }
-//                    catch (IllegalArgumentException e)
-//                    {
-//                        System.err.println(MSG_INVALID_INPUT);
-//                    }
-//                }
-//            }
-//        }
+                    try
+                    {
+                        done = processInput(input);
+                    }
+                    catch (IllegalArgumentException e)
+                    {
+                        System.err.println(MSG_INVALID_INPUT);
+                    }
+                }
+            }
+        }
     }
   
-//    static boolean processInput(String input) throws IllegalArgumentException
-//    {
-//        boolean quit = isQuitCmd(input);
-//
-//        if (quit)
-//        {
-//            return true;
-//        }
-//        else
-//        {
-//            BigInteger result = evaluate(input);
-//            System.out.println(result.toString());
-//
-//            return false;
-//        }
-//    }
+    static boolean processInput(String input) throws IllegalArgumentException
+    {
+        boolean quit = isQuitCmd(input);
+
+        if (quit)
+        {
+            return true;
+        }
+        else
+        {
+            BigInteger result = evaluate(input);
+            System.out.println(result.toString());
+
+            return false;
+        }
+    }
   
     static boolean isQuitCmd(String input)
     {

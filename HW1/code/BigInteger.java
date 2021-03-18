@@ -57,18 +57,18 @@ public class BigInteger
         return result;
     }
 
-    public boolean biggerValueThan(BigInteger big) {
+    public int biggerValueThan(BigInteger big) {
         if (numberOfDigits > big.numberOfDigits) {
-            return true;
+            return 1;
         }
         if (big.numberOfDigits > numberOfDigits) {
-            return false;
+            return -1;
         }
         for (int i=numberOfDigits-1; i>=0; i--) {
-            if (value[i] > big.value[i]) return true;
-            if (value[i] < big.value[i]) return false;
+            if (value[i] > big.value[i]) return 1;
+            if (value[i] < big.value[i]) return -1;
         }
-        return false;
+        return 0;
     }
   
     public BigInteger add(BigInteger big)
@@ -115,7 +115,13 @@ public class BigInteger
             return add(big.reverseSign());
         }
 
-        if (!biggerValueThan(big)) {
+        int biggerValueThanThis = biggerValueThan(big);
+
+        if (biggerValueThanThis == 0) {
+            return new BigInteger(0);
+        }
+
+        if (biggerValueThanThis == -1) {
             return big.subtract(this).reverseSign();
         }
 

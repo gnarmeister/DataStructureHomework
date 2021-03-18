@@ -45,6 +45,10 @@ public class BigInteger
         }
     }
 
+    public boolean isZero() {
+        return (numberOfDigits == 1 && value[0] == '0');
+    }
+
     public BigInteger reverseSign() {
         BigInteger result = new BigInteger(0);
         result.sign = sign*(-1);
@@ -147,6 +151,10 @@ public class BigInteger
 
     public BigInteger multiply(BigInteger big)
     {
+        if (this.isZero() || big.isZero()) {
+            return new BigInteger(0);
+        }
+
         BigInteger result = new BigInteger(0);
         result.sign = sign * big.sign;
         result.numberOfDigits = numberOfDigits + big.numberOfDigits;

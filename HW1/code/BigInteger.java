@@ -13,8 +13,9 @@ public class BigInteger
     // implement this
     public static final Pattern EXPRESSION_PATTERN = Pattern.compile("");
 
-    public final char[] value = new char[200];
-    public int sign = 1;
+    private final char[] value = new char[200];
+    private int sign = 1;
+    private int numberOfDigits = 0;
   
     public BigInteger(int input)
     {
@@ -39,20 +40,38 @@ public class BigInteger
 
     private void putArrayIntoValue(char[] array) {
         int length = array.length;
+        numberOfDigits = length;
         for (int i=0; i<length; i++) {
             value[i] = array[length-i-1];
         }
     }
 
-    public void reverseSign() {
-        sign *= -1;
+    public BigInteger reverseSign() {
+        BigInteger result = new BigInteger(0);
+        result.sign = sign*-1;
+        result.numberOfDigits = numberOfDigits;
+        System.arraycopy(value, 0, result.value, 0, numberOfDigits);
+        return result;
+    }
+
+    public boolean biggerValueThan(BigInteger big) {
+        if (numberOfDigits > big.numberOfDigits) {
+            return true;
+        }
+        if (big.numberOfDigits > numberOfDigits) {
+            return false;
+        }
+        for (int i=numberOfDigits-1; i>=0; i--) {
+            if (value[i] > big.value[i]) return true;
+            if (value[i] < big.value[i]) return false;
+        }
+        return false;
     }
   
     public BigInteger add(BigInteger big)
     {
         if (sign != big.sign) {
-            big.reverseSign();
-            return subtract(big);
+            return subtract(big.reverseSign());
         }
 
         BigInteger result = new BigInteger(0);
@@ -81,17 +100,38 @@ public class BigInteger
             result.value[i] = (char) (temp%10+'0');
             temp /= 10;
         }
-
         return result;
     }
 
     public BigInteger subtract(BigInteger big)
     {
         if (sign != big.sign) {
-            big.reverseSign();
-            return add(big);
+            return add(big.reverseSign());
         }
-        return big;
+        if (!biggerValueThan(big)) {
+            return big.subtract(this).reverseSign();
+        }
+
+        BigInteger result = new BigInteger(0);
+        result.sign = sign;
+
+        int temp = 0;
+
+        for (int i=0; i<numberOfDigits; i++) {
+            temp += (value[i]-'0');
+            if (big.value[i] != '\u0000') {
+                temp -= (big.value[i]-'0');
+            }
+            if (temp<0) {
+                temp+=10;
+                result.value[i] = (char) (temp+'0');
+                temp=-1;
+            } else {
+                result.value[i] = (char) (temp+'0');
+                temp=0;
+            }
+        }
+        return result;
     }
 
     public BigInteger multiply(BigInteger big)
@@ -117,9 +157,9 @@ public class BigInteger
   
     public static void main(String[] args) throws Exception
     {
-        BigInteger a = new BigInteger("-12468498416543");
-        BigInteger b = new BigInteger(-123);
-        System.out.println(a.add(b));
+        BigInteger a = new BigInteger("100");
+        BigInteger b = new BigInteger(-80);
+        System.out.println(a.subtract(b));
 //        try (InputStreamReader isr = new InputStreamReader(System.in))
 //        {
 //            try (BufferedReader reader = new BufferedReader(isr))

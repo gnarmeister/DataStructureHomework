@@ -12,28 +12,29 @@ public class MovieDB {
 
     public MovieDB() {
         genreList = new MyLinkedList<>();
-    	// HINT: MovieDBGenre 클래스를 정렬된 상태로 유지하기 위한 
-    	// MyLinkedList 타입의 멤버 변수를 초기화 한다.
     }
 
     public void insert(MovieDBItem item) {
+		// Insert the given item to the MovieDB.
     	Node<Genre> currGenre = this.genreList.head;
+    	int compare = 0;
     	while (currGenre.getNext() != null) {
-    		int compare = currGenre.getItem().getName().compareTo(item.getGenre());
+    		try {
+				compare = currGenre.getItem().getName().compareTo(item.getGenre());
+			} catch(Exception e) {
+				currGenre = currGenre.getNext();
+    			continue;
+			}
     		if (compare < 0) {
     			break;
 			}
     		if (compare == 0) {
     			currGenre.getItem().movieList.add(item.getTitle());
 			}
-    		currGenre.setNext(new Node<>(new Genre(item.getGenre()), currGenre.getNext()));
-    		currGenre.getNext().getItem().movieList.add(item.getTitle());
+    		currGenre = currGenre.getNext();
 		}
-        // Insert the given item to the MovieDB.
-
-    	// Printing functionality is provided for the sake of debugging.
-        // This code should be removed before submitting your work.
-        System.err.printf("[trace] MovieDB: INSERT [%s] [%s]\n", item.getGenre(), item.getTitle());
+		currGenre.setNext(new Node<>(new Genre(item.getGenre()), currGenre.getNext()));
+		currGenre.getNext().getItem().movieList.add(item.getTitle());
     }
 
     public void delete(MovieDBItem item) {
@@ -42,10 +43,6 @@ public class MovieDB {
         		genre.movieList.remove(item.getTitle());
 			}
 		}
-    	
-    	// Printing functionality is provided for the sake of debugging.
-        // This code should be removed before submitting your work.
-        System.err.printf("[trace] MovieDB: DELETE [%s] [%s]\n", item.getGenre(), item.getTitle());
     }
 
     public MyLinkedList<MovieDBItem> search(String term) {
@@ -61,34 +58,20 @@ public class MovieDB {
     }
     
     public MyLinkedList<MovieDBItem> items() {
+		// Search the given term from the MovieDatabase.
 		MyLinkedList<MovieDBItem> results = new MyLinkedList<>();
 		for (Genre genre: this.genreList) {
 			for (String movie: genre.movieList) {
 				results.add(new MovieDBItem(genre.getName(), movie));
 			}
 		}
-        // Search the given term from the MovieDatabase.
-        // You should return a linked list of QueryResult.
-        // The print command is handled at PrintCmd class.
-
-    	// Printing movie items is the responsibility of PrintCmd class. 
-    	// So you must not use System.out in this method to achieve specs of the assignment.
-
-    	// Printing functionality is provided for the sake of debugging.
-        // This code should be removed before submitting your work.
-        System.err.printf("[trace] MovieDB: ITEMS\n");
     	return results;
     }
 }
 
 class Genre {
 	public MovieList movieList;
-	private String name;
-
-	public Genre() {
-		this.name = null;
-		movieList = new MovieList();
-	}
+	private final String name;
 
 	public Genre(String name) {
 		this.name = name;
@@ -97,10 +80,6 @@ class Genre {
 
 	public final String getName() {
 		return name;
-	}
-
-	public final void setName(String name) {
-		this.name = name;
 	}
 }
 
@@ -119,9 +98,9 @@ class MovieList extends MyLinkedList<String> {
 
 	public void remove(String title) {
 		Node<String> temp = this.head;
-		while (head.getNext() != null) {
-			if (head.getNext().getItem().equals(title)) {
-				head.setNext(head.getNext().getNext());
+		while (temp.getNext() != null) {
+			if (temp.getNext().getItem().equals(title)) {
+				temp.setNext(temp.getNext().getNext());
 			}
 		}
 	}

@@ -8,15 +8,27 @@ import java.util.NoSuchElementException;
  * 유지하는 데이터베이스이다. 
  */
 public class MovieDB {
+	private MyLinkedList<Genre> genreList;
+
     public MovieDB() {
-        // FIXME implement this
-    	
+        genreList = new MyLinkedList<>();
     	// HINT: MovieDBGenre 클래스를 정렬된 상태로 유지하기 위한 
     	// MyLinkedList 타입의 멤버 변수를 초기화 한다.
     }
 
     public void insert(MovieDBItem item) {
-        // FIXME implement this
+    	Node<Genre> currGenre = this.genreList.head;
+    	while (currGenre.getNext() != null) {
+    		int compare = currGenre.getItem().getName().compareTo(item.getGenre());
+    		if (compare < 0) {
+    			break;
+			}
+    		if (compare == 0) {
+    			currGenre.getItem().movieList.add(item.getTitle());
+			}
+    		currGenre.setNext(new Node<>(new Genre(item.getGenre()), currGenre.getNext()));
+    		currGenre.getNext().getItem().movieList.add(item.getTitle());
+		}
         // Insert the given item to the MovieDB.
 
     	// Printing functionality is provided for the sake of debugging.
@@ -25,8 +37,11 @@ public class MovieDB {
     }
 
     public void delete(MovieDBItem item) {
-        // FIXME implement this
-        // Remove the given item from the MovieDB.
+        for (Genre genre: this.genreList) {
+        	if (genre.getName().equals(item.getGenre())) {
+        		genre.movieList.remove(item.getTitle());
+			}
+		}
     	
     	// Printing functionality is provided for the sake of debugging.
         // This code should be removed before submitting your work.
@@ -34,27 +49,24 @@ public class MovieDB {
     }
 
     public MyLinkedList<MovieDBItem> search(String term) {
-        // FIXME implement this
-        // Search the given term from the MovieDB.
-        // You should return a linked list of MovieDBItem.
-        // The search command is handled at SearchCmd class.
-    	
-    	// Printing search results is the responsibility of SearchCmd class. 
-    	// So you must not use System.out in this method to achieve specs of the assignment.
-    	
-        // This tracing functionality is provided for the sake of debugging.
-        // This code should be removed before submitting your work.
-    	System.err.printf("[trace] MovieDB: SEARCH [%s]\n", term);
-    	
-    	// FIXME remove this code and return an appropriate MyLinkedList<MovieDBItem> instance.
-    	// This code is supplied for avoiding compilation error.   
-        MyLinkedList<MovieDBItem> results = new MyLinkedList<MovieDBItem>();
-
-        return results;
+    	MyLinkedList<MovieDBItem> results = new MyLinkedList<>();
+		for (Genre genre: this.genreList) {
+			for (String movie: genre.movieList) {
+				if (movie.contains(term)) {
+					results.add(new MovieDBItem(genre.getName(), movie));
+				}
+			}
+		}
+    	return results;
     }
     
     public MyLinkedList<MovieDBItem> items() {
-        // FIXME implement this
+		MyLinkedList<MovieDBItem> results = new MyLinkedList<>();
+		for (Genre genre: this.genreList) {
+			for (String movie: genre.movieList) {
+				results.add(new MovieDBItem(genre.getName(), movie));
+			}
+		}
         // Search the given term from the MovieDatabase.
         // You should return a linked list of QueryResult.
         // The print command is handled at PrintCmd class.
@@ -65,82 +77,52 @@ public class MovieDB {
     	// Printing functionality is provided for the sake of debugging.
         // This code should be removed before submitting your work.
         System.err.printf("[trace] MovieDB: ITEMS\n");
-
-    	// FIXME remove this code and return an appropriate MyLinkedList<MovieDBItem> instance.
-    	// This code is supplied for avoiding compilation error.   
-        MyLinkedList<MovieDBItem> results = new MyLinkedList<MovieDBItem>();
-        
     	return results;
     }
 }
 
-class Genre extends Node<String> implements Comparable<Genre> {
+class Genre {
+	public MovieList movieList;
+	private String name;
+
+	public Genre() {
+		this.name = null;
+		movieList = new MovieList();
+	}
+
 	public Genre(String name) {
-		super(name);
-		throw new UnsupportedOperationException("not implemented yet");
-	}
-	
-	@Override
-	public int compareTo(Genre o) {
-		throw new UnsupportedOperationException("not implemented yet");
+		this.name = name;
+		movieList = new MovieList();
 	}
 
-	@Override
-	public int hashCode() {
-		throw new UnsupportedOperationException("not implemented yet");
+	public final String getName() {
+		return name;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		throw new UnsupportedOperationException("not implemented yet");
+	public final void setName(String name) {
+		this.name = name;
 	}
 }
 
-class MovieList implements ListInterface<String> {
-	int numItems;
-	Node<String> head;
-
-	public MovieList() {
-		numItems = 0;
-		head = new Node<>("");
-	}
-
-	@Override
-	public Iterator<String> iterator() {
-		throw new UnsupportedOperationException("not implemented yet");
-	}
-
-	@Override
-	public boolean isEmpty() {
-		throw new UnsupportedOperationException("not implemented yet");
-	}
-
-	@Override
-	public int size() {
-		return numItems;
-	}
-
+class MovieList extends MyLinkedList<String> {
 	@Override
 	public void add(String item) {
-		Node<String> temp = head;
+		Node<String> temp = this.head;
 		while (temp.getNext() != null) {
 			int compare = temp.getNext().getItem().compareTo(item);
-			if (compare > 0) break;
+			if (compare < 0) break;
 			if (compare == 0) return;
 			temp = temp.getNext();
 		}
-		Node<String> newNode = new Node<>(item, temp.getNext());
-		temp.setNext(newNode);
-		numItems++;
+		temp.setNext(new Node<>(item, temp.getNext()));
 	}
 
-	@Override
-	public String first() {
-		return head.getNext().getItem();
-	}
-
-	@Override
-	public void removeAll() {
-		throw new UnsupportedOperationException("not implemented yet");
+	public void remove(String title) {
+		Node<String> temp = this.head;
+		while (head.getNext() != null) {
+			if (head.getNext().getItem().equals(title)) {
+				head.setNext(head.getNext().getNext());
+			}
+		}
 	}
 }

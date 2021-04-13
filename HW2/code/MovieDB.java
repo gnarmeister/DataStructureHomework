@@ -96,8 +96,13 @@ class Genre extends Node<String> implements Comparable<Genre> {
 	}
 }
 
-class MovieList implements ListInterface<String> {	
+class MovieList implements ListInterface<String> {
+	int numItems;
+	Node<String> head;
+
 	public MovieList() {
+		numItems = 0;
+		head = new Node<>("");
 	}
 
 	@Override
@@ -112,17 +117,26 @@ class MovieList implements ListInterface<String> {
 
 	@Override
 	public int size() {
-		throw new UnsupportedOperationException("not implemented yet");
+		return numItems;
 	}
 
 	@Override
 	public void add(String item) {
-		throw new UnsupportedOperationException("not implemented yet");
+		Node<String> temp = head;
+		while (temp.getNext() != null) {
+			int compare = temp.getNext().getItem().compareTo(item);
+			if (compare > 0) break;
+			if (compare == 0) return;
+			temp = temp.getNext();
+		}
+		Node<String> newNode = new Node<>(item, temp.getNext());
+		temp.setNext(newNode);
+		numItems++;
 	}
 
 	@Override
 	public String first() {
-		throw new UnsupportedOperationException("not implemented yet");
+		return head.getNext().getItem();
 	}
 
 	@Override

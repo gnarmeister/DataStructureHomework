@@ -55,7 +55,7 @@ public class CalculatorTest
 			default:
 				priority = 5;
 				break;
-		};
+		}
 		return priority;
 	}
 

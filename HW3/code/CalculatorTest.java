@@ -22,15 +22,16 @@ public class CalculatorTest
 			}
 			catch (Exception e)
 			{
-				System.out.println("입력이 잘못되었습니다. 오류 : " + e.toString());
+				System.out.println("ERROR");
 			}
 		}
 	}
 
 	private static void command(String input) throws Exception {
 		String postfix = inputToPostfix(input);
+		long result = calculate(postfix);
 		System.out.println(postfix);
-		System.out.println(calculate(postfix));
+		System.out.println(result);
 	}
 
 	private static int getPriority(char operator) {
@@ -58,15 +59,6 @@ public class CalculatorTest
 		return priority;
 	}
 
-	private static long power(long A, long B) {
-		if (B == 0) return 1;
-		if (B == 1) return A;
-		long half = power(A, B/2);
-		long result = half*half;
-		if (B%2 != 0) result *= A;
-		return result;
-	}
-
 	private static long doOperation(String operator, long B, long A) {
 		long result;
 		switch (operator) {
@@ -86,7 +78,7 @@ public class CalculatorTest
 				result = A % B;
 				break;
 			case "^":
-				result = power(A, B);
+				result = (long) Math.pow(A, B);
 				break;
 			default:
 				result = 0;
@@ -97,11 +89,8 @@ public class CalculatorTest
 
 	private static String inputToPostfix(String input) throws Exception {
 		// convert input to postfix expression
-		String inputWithoutSpace = input;
-		inputWithoutSpace = inputWithoutSpace.replaceAll(" ", "");
-
 		Pattern regExp = Pattern.compile("([-+*^%()/])|([0-9]+)");
-		Matcher matcher = regExp.matcher(inputWithoutSpace);
+		Matcher matcher = regExp.matcher(input);
 
 		Stack<Character> operators = new Stack<>();
 		StringJoiner result = new StringJoiner(" ");
@@ -162,6 +151,9 @@ public class CalculatorTest
 					break;
 
 				default:
+					if (!shouldBeNumber) {
+						throw new Exception();
+					}
 					result.add(temp);
 					shouldBeNumber = false;
 			}
@@ -174,19 +166,20 @@ public class CalculatorTest
 		return result.toString();
 	}
 
-	private static long calculate(String postfix) {
+	private static long calculate(String postfix) throws Exception {
 		// calculate postfix expression
 		String[] postfixToArray = postfix.split(" ");
 		Stack<Long> numbers = new Stack<>();
 
 		for (String terms: postfixToArray) {
 			switch (terms) {
+				case "^":
+					if (numbers.peek() < 0) throw new Exception();
 				case "+":
 				case "-":
 				case "*":
 				case "/":
 				case "%":
-				case "^":
 					numbers.push(doOperation(terms, numbers.pop(), numbers.pop()));
 					break;
 				case "~":

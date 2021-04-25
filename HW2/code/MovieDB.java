@@ -17,19 +17,15 @@ public class MovieDB {
     public void insert(MovieDBItem item) {
 		// Insert the given item to the MovieDB.
     	Node<Genre> currGenre = this.genreList.head;
-    	int compare = 0;
+    	int compare;
     	while (currGenre.getNext() != null) {
-    		try {
-				compare = currGenre.getItem().getName().compareTo(item.getGenre());
-			} catch(Exception e) {
-				currGenre = currGenre.getNext();
-    			continue;
-			}
-    		if (compare < 0) {
+    		compare = currGenre.getNext().getItem().getName().compareTo(item.getGenre());
+    		if (compare > 0) {
     			break;
 			}
     		if (compare == 0) {
-    			currGenre.getItem().movieList.add(item.getTitle());
+    			currGenre.getNext().getItem().movieList.add(item.getTitle());
+    			return;
 			}
     		currGenre = currGenre.getNext();
 		}
@@ -89,7 +85,7 @@ class MovieList extends MyLinkedList<String> {
 		Node<String> temp = this.head;
 		while (temp.getNext() != null) {
 			int compare = temp.getNext().getItem().compareTo(item);
-			if (compare < 0) break;
+			if (compare > 0) break;
 			if (compare == 0) return;
 			temp = temp.getNext();
 		}
@@ -101,7 +97,9 @@ class MovieList extends MyLinkedList<String> {
 		while (temp.getNext() != null) {
 			if (temp.getNext().getItem().equals(title)) {
 				temp.setNext(temp.getNext().getNext());
+				break;
 			}
+			temp = temp.getNext();
 		}
 	}
 }

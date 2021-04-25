@@ -58,6 +58,15 @@ public class CalculatorTest
 		return priority;
 	}
 
+	private static long power(long A, long B) {
+		if (B == 0) return 1;
+		if (B == 1) return A;
+		long half = power(A, B/2);
+		long result = half*half;
+		if (B%2 != 0) result *= A;
+		return result;
+	}
+
 	private static long doOperation(String operator, long B, long A) {
 		long result;
 		switch (operator) {
@@ -77,10 +86,7 @@ public class CalculatorTest
 				result = A % B;
 				break;
 			case "^":
-				result = A;
-				for (int i=1; i<B; i++) {
-					result *= A;
-				}
+				result = power(A, B);
 				break;
 			default:
 				result = 0;
@@ -147,7 +153,7 @@ public class CalculatorTest
 					if (shouldBeNumber) {
 						throw new Exception();
 					} else {
-						if (!operators.isEmpty() && getPriority(operators.peek())<getPriority(temp.charAt(0))) {
+						while (!operators.isEmpty() && getPriority(operators.peek())<=getPriority(temp.charAt(0))) {
 							result.add(operators.pop().toString());
 						}
 						operators.push(temp.charAt(0));

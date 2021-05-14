@@ -175,18 +175,41 @@ public class SortingTest
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	private static void Merge(int[] A, int[] B) {
-		// 두 배열을 merge 하는 메소드
+	private static void Merge(int[] A, int[] B, int start, int end, int mid) {
+		// B 를 merge 해서 A에 저장하는 메소드
+		int indexA = start;
+		int indexB1 = start;
+		int indexB2 = mid+1;
+		while (indexB1 <= mid && indexB2 <= end) {
+			if (B[indexB1] < B[indexB2]) {
+				A[indexA++] = B[indexB1++];
+			} else {
+				A[indexA++] = B[indexB2++];
+			}
+		}
+		while (indexB1 <= mid) {
+			A[indexA++] = B[indexB1++];
+		}
+		while (indexB2 <= end) {
+			A[indexA++] = B[indexB2++];
+		}
 	}
 	
-	private static void DoMergeSortRecursive(int[] A, int[] B) {
+	private static void DoMergeSortRecursive(int[] A, int[] B, int start, int end) {
 		// Merge sort 를 재귀적으로 수행하기 위한 메소드
-
+		if (start == end) {
+			return;
+		}
+		int mid = (end + start)/2;
+		DoMergeSortRecursive(B, A, start, mid);
+		DoMergeSortRecursive(B, A, mid+1, end);
+		Merge(A, B, start, end, mid);
 	}
 	
 	private static int[] DoMergeSort(int[] value)
 	{
-		// TODO : Merge Sort 를 구현하라.
+		int[] copy = value.clone();
+		DoMergeSortRecursive(value, copy, 0, value.length-1);
 		return (value);
 	}
 

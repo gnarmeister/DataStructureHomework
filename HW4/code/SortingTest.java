@@ -95,25 +95,18 @@ public class SortingTest
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	private static void DoBubbleSortRecursive(int[] value, int length) {
-		// Bubble sort 를 재귀적으로 수행하기 위한 메소드
-		if (length<2) {
-			return;
-		}
-		int temp;
-		for (int i=0; i<length-1; i++) {
-			if (value[i] > value[i+1]) {
-				temp = value[i];
-				value[i] = value[i+1];
-				value[i+1] = temp;
-			}
-		}
-		DoBubbleSortRecursive(value, length-1);
-	}
-
 	private static int[] DoBubbleSort(int[] value)
 	{
-		DoBubbleSortRecursive(value, value.length);
+		int temp;
+		for (int i=value.length-1; i>0; i--) {
+			for (int j=0; j<i; j++) {
+				if (value[j] > value[j+1]) {
+					temp = value[j];
+					value[j] = value[j+1];
+					value[j+1] = temp;
+				}
+			}
+		}
 		return (value);
 	}
 
@@ -215,19 +208,19 @@ public class SortingTest
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	private static int partition(int[] value, int start, int end) {
-		int[] temp = value.clone();
-		int index1 = start;
-		int index2 = end;
-		int pivotValue = value[end];
-
-		for (int i=start; i<=end; i++) {
-			if (temp[i] < pivotValue) {
-				value[index1++] = temp[i];
-			} else {
-				value[index2--] = temp[i];
+		int i = start-1;
+		int pivot = value[end];
+		int temp;
+		for (int j=start; j<end; j++) {
+			if (value[j] < pivot) {
+				temp = value[++i];
+				value[i] = value[j];
+				value[j] = temp;
 			}
 		}
-		return index1;
+		value[end] = value[++i];
+		value[i] = pivot;
+		return i;
 	}
 
 	private static void DoQuickSortRecursive(int[] value, int start, int end) {

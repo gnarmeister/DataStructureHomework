@@ -95,31 +95,95 @@ public class SortingTest
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	private static void DoBubbleSortRecursive(int[] value, int length) {
+		// Bubble sort 를 재귀적으로 수행하기 위한 메소드
+		if (length<2) {
+			return;
+		}
+		int temp;
+		for (int i=0; i<length-1; i++) {
+			if (value[i] > value[i+1]) {
+				temp = value[i];
+				value[i] = value[i+1];
+				value[i+1] = temp;
+			}
+		}
+		DoBubbleSortRecursive(value, length-1);
+	}
+
 	private static int[] DoBubbleSort(int[] value)
 	{
-		// TODO : Bubble Sort 를 구현하라.
-		// value는 정렬안된 숫자들의 배열이며 value.length 는 배열의 크기가 된다.
-		// 결과로 정렬된 배열은 리턴해 주어야 하며, 두가지 방법이 있으므로 잘 생각해서 사용할것.
-		// 주어진 value 배열에서 안의 값만을 바꾸고 value를 다시 리턴하거나
-		// 같은 크기의 새로운 배열을 만들어 그 배열을 리턴할 수도 있다.
+		DoBubbleSortRecursive(value, value.length);
 		return (value);
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	private static int[] DoInsertionSort(int[] value)
 	{
-		// TODO : Insertion Sort 를 구현하라.
+		int max;
+		int temp;
+		for (int i=value.length-1; i>0; i--) {
+			max = 0;
+			for (int j=1; j<=i; j++) {
+				if (value[j] > value[max]) max = j;
+			}
+			if (max != i) {
+				temp = value[i];
+				value[i] = value[max];
+				value[max] = temp;
+			}
+		}
 		return (value);
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	private static int[] DoHeapSort(int[] value)
-	{
-		// TODO : Heap Sort 를 구현하라.
+	private static void percolateDown(int[] value, int index, int length) {
+		// 배열 안 특정 원소를 percolate down 하는 메소드
+		int child = 2 * index + 1;
+		int right = 2 * index + 2;
+		int temp;
+		if (child < length) {
+			if (right < length && value[child] < value[right]) {
+				child = right;
+			}
+			if (value[index] < value[child]) {
+				temp = value[index];
+				value[index] = value[child];
+				value[child] = temp;
+				percolateDown(value, child, length);
+			}
+		}
+	}
+
+	private static void BuildHeap(int[] value) {
+		// 주어진 배열을 heap 으로 만들기 위한 메소드
+		for (int i=value.length/2-1; i>=0; i--) {
+			percolateDown(value, i, value.length);
+		}
+	}
+
+	private static int[] DoHeapSort(int[] value) {
+		BuildHeap(value);
+		int temp;
+		for (int i=value.length-1; i>0; i--) {
+			temp = value[i];
+			value[i] = value[0];
+			value[0] = temp;
+			percolateDown(value, 0, i);
+		}
 		return (value);
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	private static void Merge(int[] A, int[] B) {
+		// 두 배열을 merge 하는 메소드
+	}
+	
+	private static void DoMergeSortRecursive(int[] A, int[] B) {
+		// Merge sort 를 재귀적으로 수행하기 위한 메소드
+
+	}
+	
 	private static int[] DoMergeSort(int[] value)
 	{
 		// TODO : Merge Sort 를 구현하라.

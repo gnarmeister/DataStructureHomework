@@ -214,9 +214,33 @@ public class SortingTest
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
+	private static int partition(int[] value, int start, int end) {
+		int[] temp = value.clone();
+		int index1 = start;
+		int index2 = end;
+		int pivotValue = value[end];
+
+		for (int i=start; i<=end; i++) {
+			if (temp[i] < pivotValue) {
+				value[index1++] = temp[i];
+			} else {
+				value[index2--] = temp[i];
+			}
+		}
+		return index1;
+	}
+
+	private static void DoQuickSortRecursive(int[] value, int start, int end) {
+		if (start < end) {
+			int pivot = partition(value, start, end);
+			DoQuickSortRecursive(value, start, pivot-1);
+			DoQuickSortRecursive(value, pivot+1, end);
+		}
+	}
+
 	private static int[] DoQuickSort(int[] value)
 	{
-		// TODO : Quick Sort 를 구현하라.
+		DoQuickSortRecursive(value, 0, value.length-1);
 		return (value);
 	}
 

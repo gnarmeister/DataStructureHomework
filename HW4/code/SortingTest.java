@@ -223,7 +223,51 @@ public class SortingTest
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	private static int[] DoRadixSort(int[] value)
 	{
-		// TODO : Radix Sort 를 구현하라.
+		// 절대값이 가장 큰 원소를 저장
+		int max = 0;
+		for (int number : value) {
+			if (Math.abs(number) > max) {
+				max = Math.abs(number);
+			}
+		}
+
+		// 각 자리수 별로 숫자를 저장할 버킷(queue)을 생성
+		ArrayList<Queue<Integer>> buckets = new ArrayList<>(10);
+		for (int i=0; i<10; i++) {
+			buckets.add(new LinkedList<>());
+		}
+
+		// 각 자리수에 대해서 bucket sort
+		int index;
+		for (int exp=1; max/exp>0; exp*=10) {
+			for (int number : value) {
+				buckets.get(Math.abs(number) / exp % 10).offer(number);
+			}
+			index = 0;
+			for (Queue<Integer> bucket : buckets) {
+				while (!bucket.isEmpty()) {
+					value[index++] = bucket.poll();
+				}
+			}
+		}
+
+		// 마지막으로 부호에 대해서 정렬
+		Stack<Integer> negativeNumbers = new Stack<>(); // 음수를 저장할 stack 생성
+		for (int number : value) {
+			if (number < 0) {
+				negativeNumbers.push(number);
+			} else {
+				buckets.get(0).offer(number);
+			}
+		}
+		index = 0;
+		while(!negativeNumbers.isEmpty()) {
+			value[index++] = negativeNumbers.pop();
+		}
+		while (!buckets.get(0).isEmpty()) {
+			value[index++] = buckets.get(0).poll();
+		}
+
 		return (value);
 	}
 }

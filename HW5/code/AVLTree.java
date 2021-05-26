@@ -7,6 +7,10 @@ public class AVLTree<E extends Comparable<E>> {
         root = NIL;
     }
 
+    public AVLTree(E item, String index) {
+        root = new AVLNode<>(item, index);
+    }
+
     private AVLNode<E> searchItem(AVLNode<E> node, E target) {
         // 검색을 재귀적으로 구현하기 위한 private method
         if (node == NIL) return NIL;

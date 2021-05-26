@@ -2,7 +2,7 @@ import java.io.*;
 
 public class Matching
 {
-	NewHashTable<Integer, StringHashValue> hashTable;
+	static NewHashTable<Integer, StringHashValue> hashTable;
 	public static void main(String args[])
 	{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -43,9 +43,12 @@ public class Matching
 		try {
 			FileReader reader = new FileReader(location);
 			BufferedReader bufferReader = new BufferedReader(reader);
-			String readLine = null;
+			String readLine;
+			int lineIndex = 1;
 			while ((readLine = bufferReader.readLine()) != null ) {
-
+				for (int i=0; i<readLine.length()-6; i++) {
+					hashTable.add(new StringHashValue(readLine.substring(i, i+6-1)), "("+lineIndex+" "+(i+1)+")");
+				}
 			}
 		} catch (IOException e) {
 			System.out.println(e);

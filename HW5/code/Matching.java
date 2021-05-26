@@ -27,16 +27,16 @@ public class Matching
 	}
 
 	private static void command(String input) throws FileNotFoundException {
-		String[] parsedInput = input.split(" ");
-		switch (parsedInput[0]) {
-			case "<":
-				read(parsedInput[1]);
+		char indicator = input.charAt(0);
+		switch (indicator) {
+			case '<':
+				read(input.substring(2));
 				break;
-			case "@":
-				print(parsedInput[1]);
+			case '@':
+				print(input.substring(2));
 				break;
-			case "?":
-				search(parsedInput[1]);
+			case '?':
+				search(input.substring(2));
 				break;
 		}
 	}
@@ -52,6 +52,7 @@ public class Matching
 				for (int i=0; i<readLine.length()-6; i++) {
 					hashTable.add(new StringHashValue(readLine.substring(i, i+6)), "("+lineIndex+", "+(i+1)+")");
 				}
+				lineIndex++;
 			}
 		} catch (IOException e) {
 			System.out.println(e);
@@ -87,7 +88,7 @@ public class Matching
 				System.out.println("(0, 0)");
 				return;
 			} else {
-				for (String index : possibleLocationList) {
+				for (String index : new ArrayList<>(possibleLocationList)) {
 					temp = index.substring(0, 4) + (Integer.parseInt(index.substring(4, 5)) + i) + ")";
 					if (!nextLocation.indexList.contains(temp)) {
 						possibleLocationList.remove(index);
@@ -95,6 +96,11 @@ public class Matching
 				}
 			}
 		}
+		if (possibleLocationList.size() == 0) {
+			System.out.println("(0, 0)");
+			return;
+		}
+
 		String result = possibleLocationList.get(0);
 		for (int i=1; i<possibleLocationList.size(); i++) {
 			result = result + " " + possibleLocationList.get(i);

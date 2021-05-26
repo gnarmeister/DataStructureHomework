@@ -17,9 +17,9 @@ public class AVLTree<E extends Comparable<E>> {
             return node;
         }
         if (node.item.compareTo(target) < 0) {
-            return searchItem(node.left, target);
-        } else {
             return searchItem(node.right, target);
+        } else {
+            return searchItem(node.left, target);
         }
     }
 

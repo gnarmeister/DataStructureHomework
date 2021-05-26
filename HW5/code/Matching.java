@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Queue;
 
 public class Matching
@@ -49,13 +50,12 @@ public class Matching
 			int lineIndex = 1;
 			while ((readLine = bufferReader.readLine()) != null ) {
 				for (int i=0; i<readLine.length()-6; i++) {
-					hashTable.add(new StringHashValue(readLine.substring(i, i+6)), "("+lineIndex+" "+(i+1)+")");
+					hashTable.add(new StringHashValue(readLine.substring(i, i+6)), "("+lineIndex+", "+(i+1)+")");
 				}
 			}
 		} catch (IOException e) {
 			System.out.println(e);
 		}
-
 	}
 
 	private static void print(String index) {
@@ -67,5 +67,38 @@ public class Matching
 		System.out.println(itemList.poll().value);
 	}
 
-	private static void search(String pattern) {}
+	private static void search(String pattern) {
+		StringHashValue patternPart = new StringHashValue(pattern.substring(0, 6));
+		AVLNode<StringHashValue> possibleLocation = hashTable.search(patternPart);
+		if (possibleLocation == null) {
+			// pattern 의 첫 6글자 없으면 (0, 0) 출력 후 종료
+			System.out.println("(0, 0)");
+			return;
+		}
+		ArrayList<String> possibleLocationList = new ArrayList<>(possibleLocation.indexList);
+		AVLNode<StringHashValue> nextLocation;
+		String temp;
+		for (int i=1; i<=pattern.length()-6; i++) {
+			// pattern 의 substring 들로 재검색
+			patternPart.value = pattern.substring(i, i+6);
+			nextLocation = hashTable.search(patternPart);
+			if (nextLocation == null) {
+				// 재검색 결과 없으면 (0, 0) 출력 후 종료
+				System.out.println("(0, 0)");
+				return;
+			} else {
+				for (String index : possibleLocationList) {
+					temp = index.substring(0, 4) + (Integer.parseInt(index.substring(4, 5)) + i) + ")";
+					if (!nextLocation.indexList.contains(temp)) {
+						possibleLocationList.remove(index);
+					}
+				}
+			}
+		}
+		String result = possibleLocationList.get(0);
+		for (int i=1; i<possibleLocationList.size(); i++) {
+			result = result + " " + possibleLocationList.get(i);
+		}
+		System.out.println(result);
+	}
 }

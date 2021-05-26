@@ -22,4 +22,10 @@ public class NewHashTable<K, V extends Comparable<V> & HashValue<K>> extends Has
             return tree.getAllNode();
         }
     }
+
+    public AVLNode<V> search(V target) {
+        AVLTree<V> tree = super.get(target.hashFunction());
+        if (tree==null) return null;
+        return tree.search(target);
+    }
 }

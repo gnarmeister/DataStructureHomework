@@ -11,7 +11,7 @@ public class AVLTree<E extends Comparable<E>> {
     }
 
     public AVLTree(E item, String index) {
-        root = new AVLNode<>(item, index);
+        root = new AVLNode<>(item, NIL, NIL, 1, index);
     }
 
     private AVLNode<E> searchItem(AVLNode<E> node, E target) {
@@ -37,7 +37,7 @@ public class AVLTree<E extends Comparable<E>> {
         // 해당 노드를 기준으로 어떤 balancing 이 필요한지 판단
         int type = ILLEGAL;
         if (node.left.height+2 <= node.right.height) {
-            if (node.right.right.height <= node.right.left.height) {
+            if (node.right.left.height <= node.right.right.height) {
                 type = RR;
             } else {
                 type = RL;
@@ -101,14 +101,14 @@ public class AVLTree<E extends Comparable<E>> {
         // item 삽입을 재귀적으로 수행하기 위한 private method
         int type;
         if (node == NIL) {
-            node = new AVLNode<>(newItem, index);
+            node = new AVLNode<>(newItem, NIL, NIL, 1, index);
         } else if (node.item.compareTo(newItem) < 0) {
-            node.left = insertItem(node.left, newItem, index);
+            node.right = insertItem(node.right, newItem, index);
             node.height = 1 + Math.max(node.left.height, node.right.height);
             type = needBalance(node);
             node = balance(node, type);
         } else if (node.item.compareTo(newItem) > 0) {
-            node.right = insertItem(node.right, newItem, index);
+            node.left = insertItem(node.left, newItem, index);
             node.height = 1 + Math.max(node.left.height, node.right.height);
             type = needBalance(node);
             node = balance(node, type);

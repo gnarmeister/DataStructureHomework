@@ -49,7 +49,7 @@ public class Matching
 			int lineIndex = 1;
 			while ((readLine = bufferReader.readLine()) != null ) {
 				for (int i=0; i<readLine.length()-6; i++) {
-					hashTable.add(new StringHashValue(readLine.substring(i, i+6-1)), "("+lineIndex+" "+(i+1)+")");
+					hashTable.add(new StringHashValue(readLine.substring(i, i+6)), "("+lineIndex+" "+(i+1)+")");
 				}
 			}
 		} catch (IOException e) {

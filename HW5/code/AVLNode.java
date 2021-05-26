@@ -13,13 +13,6 @@ public class AVLNode<E> {
         left = right = null;
     }
 
-    public AVLNode(E newItem, String index) {
-        item = newItem;
-        height = 1;
-        left = right = null;
-        indexList.add(index);
-    }
-
     public AVLNode(E newItem, AVLNode<E> leftChild, AVLNode<E> rightChild, int h, String index) {
         item = newItem;
         height = h;

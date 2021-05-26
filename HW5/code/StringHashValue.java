@@ -21,4 +21,8 @@ public class StringHashValue implements HashValue<Integer>, Comparable<StringHas
     public int compareTo(StringHashValue o) {
         return value.compareTo(o.value);
     }
+
+    public String toString() {
+        return value;
+    }
 }

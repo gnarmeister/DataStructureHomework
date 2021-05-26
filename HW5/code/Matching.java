@@ -2,6 +2,7 @@ import java.io.*;
 
 public class Matching
 {
+	NewHashTable<Integer, StringHashValue> hashTable;
 	public static void main(String args[])
 	{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -23,9 +24,36 @@ public class Matching
 		}
 	}
 
-	private static void command(String input)
-	{
-		// TODO : 아래 문장을 삭제하고 구현해라.
-		System.out.println("<< command 함수에서 " + input + " 명령을 처리할 예정입니다 >>");
+	private static void command(String input) throws FileNotFoundException {
+		String[] parsedInput = input.split(" ");
+		switch (parsedInput[0]) {
+			case "<":
+				read(parsedInput[1]);
+				break;
+			case "@":
+				print(parsedInput[1]);
+				break;
+			case "?":
+				search(parsedInput[1]);
+				break;
+		}
 	}
+
+	private static void read(String location) throws FileNotFoundException {
+		try {
+			FileReader reader = new FileReader(location);
+			BufferedReader bufferReader = new BufferedReader(reader);
+			String readLine = null;
+			while ((readLine = bufferReader.readLine()) != null ) {
+
+			}
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+
+	}
+
+	private static void print(String index) {}
+
+	private static void search(String pattern) {}
 }

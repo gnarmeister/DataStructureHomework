@@ -50,7 +50,7 @@ public class Matching
 			int lineIndex = 1;
 			while ((readLine = bufferReader.readLine()) != null ) {
 				for (int i=0; i<readLine.length()-6; i++) {
-					hashTable.add(new StringHashValue(readLine.substring(i, i+6)), "("+lineIndex+", "+(i+1)+")");
+					hashTable.add(new StringHashValue(readLine.substring(i, i+6)), lineIndex+", "+(i+1));
 				}
 				lineIndex++;
 			}
@@ -89,7 +89,7 @@ public class Matching
 				return;
 			} else {
 				for (String index : new ArrayList<>(possibleLocationList)) {
-					temp = index.substring(0, 4) + (Integer.parseInt(index.substring(4, 5)) + i) + ")";
+					temp = index.split(", ")[0] + ", " + (Integer.parseInt(index.split(", ")[1]) + i);
 					if (!nextLocation.indexList.contains(temp)) {
 						possibleLocationList.remove(index);
 					}
@@ -101,9 +101,9 @@ public class Matching
 			return;
 		}
 
-		String result = possibleLocationList.get(0);
+		String result = "("+possibleLocationList.get(0)+")";
 		for (int i=1; i<possibleLocationList.size(); i++) {
-			result = result + " " + possibleLocationList.get(i);
+			result = result + " (" + possibleLocationList.get(i) + ")";
 		}
 		System.out.println(result);
 	}

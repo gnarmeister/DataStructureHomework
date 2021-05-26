@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class AVLTree<E extends Comparable<E>> {
     // 강의자료의 AVLTree 자바 구현을 참고하여 작성하였습니다.
     private AVLNode<E> root;
@@ -119,5 +122,20 @@ public class AVLTree<E extends Comparable<E>> {
     public void insert(E newItem, String index) {
         // item 삽입
         root = insertItem(root, newItem, index);
+    }
+
+    private Queue<E> getAllNodeRecursive(AVLNode<E> node, Queue<E> queue) {
+        if (node == NIL) {
+            return queue;
+        }
+        queue.offer(node.item);
+        getAllNodeRecursive(node.left, queue);
+        getAllNodeRecursive(node.right, queue);
+        return queue;
+    }
+
+    public Queue<E> getAllNode() {
+        Queue<E> queue = new LinkedList<>();
+        return getAllNodeRecursive(root, queue);
     }
 }

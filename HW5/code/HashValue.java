@@ -1,3 +1,3 @@
 interface HashValue<K> {
-    public K hashFunction();
+    K hashFunction();
 }

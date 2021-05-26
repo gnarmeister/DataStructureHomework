@@ -1,8 +1,9 @@
 import java.io.*;
+import java.util.Queue;
 
 public class Matching
 {
-	static NewHashTable<Integer, StringHashValue> hashTable;
+	static NewHashTable<Integer, StringHashValue> hashTable = new NewHashTable<>();
 	public static void main(String args[])
 	{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -39,8 +40,9 @@ public class Matching
 		}
 	}
 
-	private static void read(String location) throws FileNotFoundException {
+	private static void read(String location) {
 		try {
+			hashTable = new NewHashTable<>();
 			FileReader reader = new FileReader(location);
 			BufferedReader bufferReader = new BufferedReader(reader);
 			String readLine;
@@ -56,7 +58,14 @@ public class Matching
 
 	}
 
-	private static void print(String index) {}
+	private static void print(String index) {
+		Queue<StringHashValue> itemList = hashTable.getItems(Integer.parseInt(index));
+		for (int i=0; i<itemList.size()-1; i++) {
+			System.out.print(itemList.poll().value);
+			System.out.print(" ");
+		}
+		System.out.println(itemList.poll().value);
+	}
 
 	private static void search(String pattern) {}
 }

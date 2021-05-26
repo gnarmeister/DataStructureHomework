@@ -6,6 +6,13 @@ public class AVLNode<E> {
     public E item;
     public LinkedList<String> indexList = new LinkedList<>();
 
+    // 생성자들
+    public AVLNode() {
+        item = null;
+        height = 0;
+        left = right = null;
+    }
+
     public AVLNode(E newItem, String index) {
         item = newItem;
         height = 1;

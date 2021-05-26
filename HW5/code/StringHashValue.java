@@ -1,6 +1,7 @@
 import java.nio.charset.StandardCharsets;
 
 public class StringHashValue implements HashValue<Integer>, Comparable<StringHashValue> {
+    // String 이 hashFunction 과 comparable 을 만족하도록 새로운 클래스 정의
     String value;
 
     StringHashValue(String input) {

@@ -1,7 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Queue;
 
 public class Matching
 {
@@ -43,6 +42,7 @@ public class Matching
 	}
 
 	private static void read(String location) {
+		// 파일 읽어오기
 		try {
 			hashTable = new NewHashTable<>();
 			FileReader reader = new FileReader(location);
@@ -61,6 +61,7 @@ public class Matching
 	}
 
 	private static void print(String index) {
+		// 주어진 key 에 해당하는 AVLTree 의 모든 노드를 출력
 		LinkedList<StringHashValue> itemList = hashTable.getItems(Integer.parseInt(index));
 		if (itemList == null) {
 			System.out.println("EMPTY");
@@ -75,6 +76,7 @@ public class Matching
 	}
 
 	private static void search(String pattern) {
+		// 패턴을 검색하여 일치하는 부분의 좌표 출력
 		StringHashValue patternPart = new StringHashValue(pattern.substring(0, 6));
 		AVLNode<StringHashValue> possibleLocation = hashTable.search(patternPart);
 		if (possibleLocation == null) {
@@ -103,6 +105,7 @@ public class Matching
 			}
 		}
 		if (possibleLocationList.size() == 0) {
+			// 남은 좌표 없으면 (0, 0) 출력 후 종료
 			System.out.println("(0, 0)");
 			return;
 		}

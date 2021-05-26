@@ -1,5 +1,4 @@
 import java.util.LinkedList;
-import java.util.Queue;
 
 public class AVLTree<E extends Comparable<E>> {
     // 강의자료의 AVLTree 자바 구현을 참고하여 작성하였습니다.
@@ -71,6 +70,7 @@ public class AVLTree<E extends Comparable<E>> {
     }
 
     private AVLNode<E> balance(AVLNode<E> node, int type) {
+        // 균형 조정
         AVLNode<E> returnNode = node;
         switch (type) {
             case LL:
@@ -130,6 +130,7 @@ public class AVLTree<E extends Comparable<E>> {
     }
 
     public LinkedList<E> getAllNode() {
+        // 모든 노드를 preorder traversal 하게 list 에 넣음
         LinkedList<E> list = new LinkedList<>();
         getAllNodeRecursive(root, list);
         return list;

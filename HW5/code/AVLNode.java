@@ -4,7 +4,7 @@ public class AVLNode<E> {
     public AVLNode<E> left, right;
     public int height;
     public E item;
-    public LinkedList<String> indexList = new LinkedList<>();
+    public LinkedList<String> indexList = new LinkedList<>(); // index 를 저장하기 위한 linked list
 
     // 생성자들
     public AVLNode() {

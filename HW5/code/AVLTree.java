@@ -68,7 +68,7 @@ public class AVLTree<E extends Comparable<E>> {
     }
 
     private AVLNode<E> balance(AVLNode<E> node, int type) {
-        AVLNode<E> returnNode = NIL;
+        AVLNode<E> returnNode = node;
         switch (type) {
             case LL:
                 returnNode = rightRotate(node);
@@ -90,5 +90,30 @@ public class AVLTree<E extends Comparable<E>> {
         return returnNode;
     }
 
+    private AVLNode<E> insertItem(AVLNode<E> node, E newItem, String index) {
+        // item 삽입을 재귀적으로 수행하기 위한 private method
+        int type;
+        if (node == NIL) {
+            node = new AVLNode<>(newItem, index);
+        } else if (node.item.compareTo(newItem) < 0) {
+            node.left = insertItem(node.left, newItem, index);
+            node.height = 1 + Math.max(node.left.height, node.right.height);
+            type = needBalance(node);
+            node = balance(node, type);
+        } else if (node.item.compareTo(newItem) > 0) {
+            node.right = insertItem(node.right, newItem, index);
+            node.height = 1 + Math.max(node.left.height, node.right.height);
+            type = needBalance(node);
+            node = balance(node, type);
+        } else {
+            // 이미 존재하는 경우
+            node.indexList.add(index);
+        }
+        return node;
+    }
 
+    public void insert(E newItem, String index) {
+        // item 삽입
+        root = insertItem(root, newItem, index);
+    }
 }

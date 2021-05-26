@@ -120,18 +120,18 @@ public class AVLTree<E extends Comparable<E>> {
         root = insertItem(root, newItem, index);
     }
 
-    private Queue<E> getAllNodeRecursive(AVLNode<E> node, Queue<E> queue) {
+    private void getAllNodeRecursive(AVLNode<E> node, LinkedList<E> list) {
         if (node == NIL) {
-            return queue;
+            return;
         }
-        queue.offer(node.item);
-        getAllNodeRecursive(node.left, queue);
-        getAllNodeRecursive(node.right, queue);
-        return queue;
+        list.add(node.item);
+        getAllNodeRecursive(node.left, list);
+        getAllNodeRecursive(node.right, list);
     }
 
-    public Queue<E> getAllNode() {
-        Queue<E> queue = new LinkedList<>();
-        return getAllNodeRecursive(root, queue);
+    public LinkedList<E> getAllNode() {
+        LinkedList<E> list = new LinkedList<>();
+        getAllNodeRecursive(root, list);
+        return list;
     }
 }

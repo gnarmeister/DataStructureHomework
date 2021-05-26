@@ -13,7 +13,7 @@ public class NewHashTable<K, V extends Comparable<V> & HashValue<K>> extends Has
         }
     }
 
-    public Queue<V> getItems(K key) {
+    public LinkedList<V> getItems(K key) {
         AVLTree<V> tree = super.get(key);
 
         if (tree == null) return null;

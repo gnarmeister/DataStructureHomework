@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Queue;
 
 public class Matching
@@ -49,7 +50,7 @@ public class Matching
 			String readLine;
 			int lineIndex = 1;
 			while ((readLine = bufferReader.readLine()) != null ) {
-				for (int i=0; i<readLine.length()-6; i++) {
+				for (int i=0; i<=readLine.length()-6; i++) {
 					hashTable.add(new StringHashValue(readLine.substring(i, i+6)), lineIndex+", "+(i+1));
 				}
 				lineIndex++;
@@ -60,12 +61,17 @@ public class Matching
 	}
 
 	private static void print(String index) {
-		Queue<StringHashValue> itemList = hashTable.getItems(Integer.parseInt(index));
-		for (int i=0; i<itemList.size()-1; i++) {
-			System.out.print(itemList.poll().value);
-			System.out.print(" ");
+		LinkedList<StringHashValue> itemList = hashTable.getItems(Integer.parseInt(index));
+		if (itemList == null) {
+			System.out.println("EMPTY");
+			return;
 		}
-		System.out.println(itemList.poll().value);
+		String result = "";
+		for (StringHashValue item : itemList) {
+			result = result + item + " ";
+		}
+		result = result.substring(0, result.length()-1);
+		System.out.println(result);
 	}
 
 	private static void search(String pattern) {

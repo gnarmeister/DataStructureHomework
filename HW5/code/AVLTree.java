@@ -1,15 +1,15 @@
 import java.util.LinkedList;
 
-public class AVLTree<E extends Comparable<E>> {
+public class AVLTree<E extends Comparable<E>, I> {
     // 강의자료의 AVLTree 자바 구현을 참고하여 작성하였습니다.
-    private AVLNode<E> root;
-    private final AVLNode<E> NIL = new AVLNode<>();
+    private AVLNode<E, I> root;
+    private final AVLNode<E, I> NIL = new AVLNode<>();
 
-    public AVLTree(E item, String index) {
+    public AVLTree(E item, I index) {
         root = new AVLNode<>(item, NIL, NIL, 1, index);
     }
 
-    private AVLNode<E> searchItem(AVLNode<E> node, E target) {
+    private AVLNode<E, I> searchItem(AVLNode<E, I> node, E target) {
         // 검색을 재귀적으로 구현하기 위한 private method
         if (node == NIL) return null;
         if (node.item.compareTo(target) == 0) {
@@ -22,13 +22,13 @@ public class AVLTree<E extends Comparable<E>> {
         }
     }
 
-    public AVLNode<E> search(E target) {
+    public AVLNode<E, I> search(E target) {
         // 검색
         return searchItem(root, target);
     }
 
     private final int LL=1, LR=2, RR=3, RL=4, NO_NEED=0, ILLEGAL=-1;
-    private int needBalance(AVLNode<E> node) {
+    private int needBalance(AVLNode<E, I> node) {
         // 해당 노드를 기준으로 어떤 balancing 이 필요한지 판단
         int type = ILLEGAL;
         if (node.left.height+2 <= node.right.height) {
@@ -49,9 +49,9 @@ public class AVLTree<E extends Comparable<E>> {
         return type;
     }
 
-    private AVLNode<E> leftRotate(AVLNode<E> node) {
-        AVLNode<E> right = node.right;
-        AVLNode<E> rightLeft = right.left;
+    private AVLNode<E, I> leftRotate(AVLNode<E, I> node) {
+        AVLNode<E, I> right = node.right;
+        AVLNode<E, I> rightLeft = right.left;
         right.left = node;
         node.right = rightLeft;
         node.height = 1 + Math.max(node.left.height, node.right.height);
@@ -59,9 +59,9 @@ public class AVLTree<E extends Comparable<E>> {
         return right;
     }
 
-    private AVLNode<E> rightRotate(AVLNode<E> node) {
-        AVLNode<E> left = node.left;
-        AVLNode<E> leftRight = left.right;
+    private AVLNode<E, I> rightRotate(AVLNode<E, I> node) {
+        AVLNode<E, I> left = node.left;
+        AVLNode<E, I> leftRight = left.right;
         left.right = node;
         node.left = leftRight;
         node.height = 1 + Math.max(node.left.height, node.right.height);
@@ -69,9 +69,9 @@ public class AVLTree<E extends Comparable<E>> {
         return left;
     }
 
-    private AVLNode<E> balance(AVLNode<E> node, int type) {
+    private AVLNode<E, I> balance(AVLNode<E, I> node, int type) {
         // 균형 조정
-        AVLNode<E> returnNode = node;
+        AVLNode<E, I> returnNode = node;
         switch (type) {
             case LL:
                 returnNode = rightRotate(node);
@@ -93,7 +93,7 @@ public class AVLTree<E extends Comparable<E>> {
         return returnNode;
     }
 
-    private AVLNode<E> insertItem(AVLNode<E> node, E newItem, String index) {
+    private AVLNode<E, I> insertItem(AVLNode<E, I> node, E newItem, I index) {
         // item 삽입을 재귀적으로 수행하기 위한 private method
         int type;
         if (node == NIL) {
@@ -115,12 +115,12 @@ public class AVLTree<E extends Comparable<E>> {
         return node;
     }
 
-    public void insert(E newItem, String index) {
+    public void insert(E newItem, I index) {
         // item 삽입
         root = insertItem(root, newItem, index);
     }
 
-    private void getAllNodeRecursive(AVLNode<E> node, LinkedList<E> list) {
+    private void getAllNodeRecursive(AVLNode<E, I> node, LinkedList<E> list) {
         if (node == NIL) {
             return;
         }

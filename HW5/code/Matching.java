@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 public class Matching
 {
-	static NewHashTable<Integer, StringHashValue> hashTable = new NewHashTable<>();
+	static NewHashTable<Integer, StringHashValue, String> hashTable = new NewHashTable<>();
 	public static void main(String args[])
 	{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -78,14 +78,14 @@ public class Matching
 	private static void search(String pattern) {
 		// 패턴을 검색하여 일치하는 부분의 좌표 출력
 		StringHashValue patternPart = new StringHashValue(pattern.substring(0, 6));
-		AVLNode<StringHashValue> possibleLocation = hashTable.search(patternPart);
+		AVLNode<StringHashValue, String> possibleLocation = hashTable.search(patternPart);
 		if (possibleLocation == null) {
 			// pattern 의 첫 6글자 없으면 (0, 0) 출력 후 종료
 			System.out.println("(0, 0)");
 			return;
 		}
 		ArrayList<String> possibleLocationList = new ArrayList<>(possibleLocation.indexList);
-		AVLNode<StringHashValue> nextLocation;
+		AVLNode<StringHashValue, String> nextLocation;
 		String temp;
 		for (int i=1; i<=pattern.length()-6; i++) {
 			// pattern 의 substring 들로 재검색

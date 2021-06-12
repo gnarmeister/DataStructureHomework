@@ -5,6 +5,7 @@ public class GraphNode<K, V> {
     public static int INF = -1;
     public V value;
     public int distance = INF;
+    public GraphNode<K, V> prev = null;
     public ArrayList<ArrayListElement<K>> adjacencyList = new ArrayList<>();
 
     GraphNode(V v) {

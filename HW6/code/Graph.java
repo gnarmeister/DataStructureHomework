@@ -1,20 +1,25 @@
 import java.util.ArrayList;
 
 public class Graph<K extends HashableKey, V> {
+    // 역 정보를 저정할 graph
+    // 각 노드를 hash table 에 저장하고, adjacency 는 각 노드에 array list 로 저장
     public static int INF = -1;
     public int size;
-    public int secondSize;
+    private int maxSize; // hash table 의 최대 크기
+    private int secondSize; // double hashing 을 위한 변수
     public ArrayList<GraphNode<K, V>> nodes;
 
     Graph(GraphNode<K, V>[] inputNodes) {
         findProperSize(inputNodes.length);
+        size = inputNodes.length;
         for (GraphNode<K, V> node : inputNodes) {
             add(node);
         }
     }
 
-    public void add(GraphNode<K, V> node) {
-        int key = node.key.hashFunction(size);
+    private void add(GraphNode<K, V> node) {
+        // Graph 에 노드 추가
+        int key = node.key.hashFunction(maxSize);
         int secondKey = node.key.hashFunction(secondSize);
         while (true) {
             if (nodes.get(key) == null) {
@@ -26,7 +31,8 @@ public class Graph<K extends HashableKey, V> {
     }
 
     public GraphNode<K, V> get(K key) {
-        int firstKey = key.hashFunction(size);
+        // key 에 해당하는 노드 찾기
+        int firstKey = key.hashFunction(maxSize);
         int secondKey = key.hashFunction(secondSize);
         int count = 0;
         while (true) {
@@ -35,7 +41,7 @@ public class Graph<K extends HashableKey, V> {
             if (temp != null && temp.key == key) {
                 return temp;
             }
-            if (count >= size) {
+            if (count >= maxSize) {
                 // error handling required: TargetNotExists
             }
             firstKey += secondKey;
@@ -43,8 +49,8 @@ public class Graph<K extends HashableKey, V> {
     }
 
     private void findProperSize(int length) {
-        size = length*2;
-        for (int i=size; i>1; i--) {
+        maxSize = length*2;
+        for (int i = maxSize; i>1; i--) {
             if (isPrime(i)) {
                 secondSize = i;
                 return;
@@ -52,7 +58,7 @@ public class Graph<K extends HashableKey, V> {
         }
     }
 
-    private boolean isPrime(int n) {
+    private static boolean isPrime(int n) {
         for (int i=2; i<=Math.sqrt(n); i++) {
             if (n%i==0) return false;
         }

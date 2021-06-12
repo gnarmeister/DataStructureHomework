@@ -1,4 +1,5 @@
 public class ArrayListElement<K> {
+    // Adjacency list 의 원소
     public int weight;
     public K key;
 

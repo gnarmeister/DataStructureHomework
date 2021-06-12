@@ -7,10 +7,6 @@ public class Subway {
     static ArrayList<GraphNode<String, String>> S = new ArrayList<>();
     static ArrayList<GraphNode<String, String>> adjacencyOfS = new ArrayList<>();
 
-    private static void command() {
-
-    }
-
     private static void readAndSaveData(String fileName) {
         try {
             FileReader fileReader = new FileReader(fileName);
@@ -28,8 +24,9 @@ public class Subway {
                         graph.get(transferStation).addAdjacency(5, splitInput[0]);
                         graph.get(splitInput[0]).addAdjacency(5, transferStation);
                     }
+                    listOfStations.get(splitInput[1]).add(splitInput[0]);
                 } else {
-                    listOfStations.put(splitInput[1], new ArrayList<String>(Collections.singletonList(splitInput[0])));
+                    listOfStations.put(splitInput[1], new ArrayList<>(Collections.singletonList(splitInput[0])));
                 }
             }
 
@@ -39,7 +36,7 @@ public class Subway {
                 graph.get(splitInput[0]).addAdjacency(Integer.parseInt(splitInput[2]), splitInput[1]);
             }
         } catch (IOException e) {
-            System.out.println(e);
+            System.out.println(e.toString());
         }
     }
 
@@ -54,14 +51,35 @@ public class Subway {
         S = new ArrayList<>();
         adjacencyOfS = new ArrayList<>();
 
-        GraphNode<String, String> originNode = graph.get(listOfStations.get(origin).get(0));
-        originNode.distance = 0;
-        GraphNode<String, String> lastAdded = markNode(originNode);
+        GraphNode<String, String> originNode;
+        GraphNode<String, String> lastAdded = new GraphNode<>("");
+        for (String originKey : listOfStations.get(origin)) {
+            originNode = graph.get(originKey);
+            originNode.distance = 0;
+            lastAdded = markNode(originNode);
+        }
+
         while (!lastAdded.value.equals(destination)) {
             lastAdded = markNode(findMinimumDistance());
         }
+        int time = lastAdded.distance;
 
-        System.out.println(lastAdded.distance);
+        Stack<String> route = new Stack<>();
+        while (!lastAdded.value.equals(origin)) {
+            if (!route.isEmpty() && route.peek().equals(lastAdded.value)) {
+                route.pop();
+                route.push("[" + lastAdded.value + "]");
+            } else {
+                route.push(lastAdded.value);
+            }
+            lastAdded = lastAdded.prev;
+        }
+        System.out.print(origin);
+        while (!route.isEmpty()) {
+            System.out.print(" "+route.pop());
+        }
+        System.out.println();
+        System.out.println(time-lastAdded.distance);
     }
 
     private static GraphNode<String, String> markNode(GraphNode<String, String> target) {
@@ -71,7 +89,7 @@ public class Subway {
         GraphNode<String, String> adjacentNode;
         for (ArrayListElement<String> adjacency : target.adjacencyList) {
             adjacentNode = graph.get(adjacency.key);
-            if (adjacentNode.distance > target.distance + adjacency.weight) {
+            if (adjacentNode.distance == GraphNode.INF || adjacentNode.distance > target.distance + adjacency.weight) {
                 adjacentNode.distance = target.distance + adjacency.weight;
                 adjacentNode.prev = target;
             }
@@ -83,10 +101,10 @@ public class Subway {
     }
 
     private static GraphNode<String, String> findMinimumDistance() {
-        int minimum = -1;
+        int minimum = GraphNode.INF;
         GraphNode<String, String> minimumNode = adjacencyOfS.get(0);
         for (GraphNode<String, String> temp : adjacencyOfS) {
-            if (temp.distance < minimum || minimum == -1) {
+            if (minimum == GraphNode.INF || temp.distance < minimum) {
                 minimum = temp.distance;
                 minimumNode = temp;
             }
@@ -98,5 +116,19 @@ public class Subway {
         String fileName = args[0];
         readAndSaveData(fileName);
 
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        while (true) {
+            try {
+                String input = br.readLine();
+                if (input.compareTo("QUIT") == 0)
+                    break;
+                String origin = input.split(" ")[0];
+                String destination = input.split(" ")[1];
+                findShortestPath(origin, destination);
+            }
+            catch (IOException e) {
+                System.out.println(e.toString());
+            }
+        }
     }
 }

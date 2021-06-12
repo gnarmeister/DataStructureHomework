@@ -49,11 +49,12 @@ public class Subway {
             temp.prev = null;
         }
         S = new ArrayList<>();
-        adjacencyOfS = new ArrayList<>();
+        adjacencyOfS = new ArrayList<>(); // S와 인접한 노드를 저장
 
         GraphNode<String, String> originNode;
         GraphNode<String, String> lastAdded = new GraphNode<>("");
         for (String originKey : listOfStations.get(origin)) {
+            // 환승역인 경우, 해당 역 이름의 모든 노드 distance 0 으로 만듦
             originNode = graph.get(originKey);
             originNode.distance = 0;
             lastAdded = markNode(originNode);
@@ -83,6 +84,7 @@ public class Subway {
     }
 
     private static GraphNode<String, String> markNode(GraphNode<String, String> target) {
+        // 해당 target node 를 S에 포함하고 이에 맞게 adjacencyOfS도 업데이트
         S.add(target);
         adjacencyOfS.remove(target);
 
@@ -101,6 +103,7 @@ public class Subway {
     }
 
     private static GraphNode<String, String> findMinimumDistance() {
+        // adjacencyOfS 중 distance 가 최소인 노드 골라 리턴
         int minimum = GraphNode.INF;
         GraphNode<String, String> minimumNode = adjacencyOfS.get(0);
         for (GraphNode<String, String> temp : adjacencyOfS) {

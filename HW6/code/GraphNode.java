@@ -8,6 +8,10 @@ public class GraphNode<K, V> {
     public GraphNode<K, V> prev = null;
     public ArrayList<ArrayListElement<K>> adjacencyList = new ArrayList<>();
 
+    GraphNode() {
+        value = null;
+    }
+
     GraphNode(V v) {
         value = v;
     }

@@ -2,13 +2,12 @@ import java.util.ArrayList;
 
 public class GraphNode<K, V> {
     // Graph 의 노드
-    public K key;
+    public static int INF = -1;
     public V value;
-    public int distance = Graph.INF;
+    public int distance = INF;
     public ArrayList<ArrayListElement<K>> adjacencyList = new ArrayList<>();
 
-    GraphNode(K k, V v) {
-        key = k;
+    GraphNode(V v) {
         value = v;
     }
 
